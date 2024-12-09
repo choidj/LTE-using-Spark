@@ -1,0 +1,80 @@
+version: '3.8'
+services:
+  spark-master:
+    image: implicitsr-spark
+    build:
+      context: ./spark
+    container_name: implicitsr-spark-master
+    environment:
+      - SPARK_MODE=master
+    ports:
+      - "7077:7077"
+      - "8080:8080"
+    volumes:
+      - ./:/project:rw
+    networks:
+      - spark-network
+
+  spark-worker-1:
+    image: implicitsr-spark
+    build:
+      context: ./spark
+    container_name: implicitsr-spark-worker-1
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - NVIDIA_VISIBLE_DEVICES=0  # GPU 0 할당
+    runtime: nvidia
+    volumes:
+      - ./:/project:rw
+    networks:
+      - spark-network
+
+  spark-worker-2:
+    image: implicitsr-spark
+    build:
+      context: ./spark
+    container_name: implicitsr-spark-worker-2
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - NVIDIA_VISIBLE_DEVICES=0  # GPU 1 할당
+    runtime: nvidia
+    volumes:
+      - ./:/project:rw
+    networks:
+      - spark-network
+
+  spark-worker-3:
+    image: implicitsr-spark
+    build:
+      context: ./spark
+    container_name: implicitsr-spark-worker-3
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - NVIDIA_VISIBLE_DEVICES=0  # GPU 2 할당
+    runtime: nvidia
+    volumes:
+      - ./:/project:rw
+    networks:
+      - spark-network
+
+  spark-worker-4:
+    image: implicitsr-spark
+    build:
+      context: ./spark
+    container_name: implicitsr-spark-worker-4
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - NVIDIA_VISIBLE_DEVICES=0  # GPU 3 할당
+    runtime: nvidia
+    volumes:
+      - ./:/project:rw
+    networks:
+      - spark-network
+
+networks:
+  spark-network:
+    driver: bridge
